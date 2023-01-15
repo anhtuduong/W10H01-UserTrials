@@ -12,7 +12,28 @@ public class TrialOfTheMountains {
 	}
 
 	public static void assignBeasts(Mountain[] mountains) {
-		// TODO
+		for (Mountain mountain : mountains) {
+			if (mountain.beast == null) {
+				assignBeast(mountain);
+			}
+		}
+	}
+
+	private static void assignBeast(Mountain mountain) {
+		Beast[] beasts = Beast.values();
+		for (Beast beast : beasts) {
+			boolean canAssign = true;
+			for (Mountain neighbour : mountain.neighbours) {
+				if (neighbour.beast == beast) {
+					canAssign = false;
+					break;
+				}
+			}
+			if (canAssign) {
+				mountain.beast = beast;
+				return;
+			}
+		}
 	}
 
 	public static class Mountain {
