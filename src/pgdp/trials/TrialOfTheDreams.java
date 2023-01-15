@@ -40,37 +40,38 @@ public class TrialOfTheDreams {
 	 *         {@code null} if no such combination exists.
 	 */
 	public static byte[] lockPick(Function<byte[], Boolean> lock, int maxlen) {
+		int total_possible_combination = (int) Math.pow(256, maxlen);
 		byte[] key = new byte[maxlen];
-		Function<Byte[], Boolean> lockFunctionWrapper = (key) -> lock.apply(toPrimitive(key));
-		return lockPick(lockFunctionWrapper, key, maxlen);
-	}
-
-	private static List<Byte> lockPick(Function<Byte[], Boolean> lock, List<Byte> key, int maxlen) {
-		if (key.size() == maxlen) {
-			Byte[] keyArr = key.toArray(new Byte[key.size()]);
-			if (lock.apply(keyArr)) {
+		for (int i = 0; i < total_possible_combination; i++) {
+			int num = i;
+			for (int j = 0; j < maxlen; j++) {
+				key[j] = (byte) (num % 256);
+				num = num / 256;
+			}
+			if (lock.apply(key)) {
 				return key;
-			} else {
-				return null;
 			}
-		}
-		for (byte i = Byte.MIN_VALUE; i < Byte.MAX_VALUE; i++) {
-			key.add(i);
-			List<Byte> result = lockPick(lock, key, maxlen);
-			if (result != null) {
-				return result;
-			}
-			key.remove(key.size() - 1);
 		}
 		return null;
 	}
 
-	public static Byte[] toByte(Function<byte[], Boolean> array) {
-		Byte[] result = new Byte[array.length];
-		for (int i = 0; i < array.length; i++) {
-			result[i] = array[i];
+	private static List<Byte> lockPick(Function<Byte[], Boolean> lock, List<Byte> key, int maxlen) {
+		if (key.size() == maxlen) {
+			Byte[] keyArray = key.toArray(new Byte[key.size()]);
+			if (lock.apply(keyArray)) {
+				return key;
+			}
+		} else {
+			for (byte i = 0; i < 256; i++) {
+				List<Byte> newKey = new ArrayList<>(key);
+				newKey.add(i);
+				List<Byte> result = lockPick(lock, newKey, maxlen);
+				if (result != null) {
+					return result;
+				}
+			}
 		}
-		return result;
+		return null;
 	}
 
 }
