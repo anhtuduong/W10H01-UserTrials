@@ -111,7 +111,6 @@ public class TrialOfTheSword {
 		 * @return index within the flattened array.
 		 */
 		public int computeIndex(int... idxs) {
-			checkValidIdxs(idxs);
 			int index = idxs[idxs.length - 1];
 			for (int i = idxs.length - 2; i >= 0; i--) {
 				index = index * dims[i] + idxs[i];
