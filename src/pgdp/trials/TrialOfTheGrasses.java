@@ -1,5 +1,6 @@
 package pgdp.trials;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,8 +61,13 @@ public class TrialOfTheGrasses {
 		 * @return Stream of {@code TreeNode} in preorder.
 		 */
 		public Stream<TreeNode<T>> flatten() {
-			// TODO
-			return null;
+			if (isLeaf()) {
+				return Stream.of(this);
+			}
+			return Stream.concat(
+					Stream.of(this),
+					Arrays.stream(this.nodes).flatMap(child -> child.flatten())
+			);
 		}
 
 		@Override
